@@ -19,7 +19,13 @@ export default function ({types: t}) {
 
         const directory = path.dirname(path.resolve(state.file.opts.filename));
         const file = path.resolve(directory, source);
-        const json = JSON.parse(fs.readFileSync(file, 'utf8'));
+        let json;
+
+        try {
+          json = JSON.parse(fs.readFileSync(file, 'utf8'));
+        } catch (err) {
+          throw link.buildCodeFrameError('Imported file could not be found');
+        }
 
         const {name} = node.specifiers[0].local;
 
